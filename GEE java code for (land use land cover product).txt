@@ -1,0 +1,55 @@
+// Load MODIS Land Cover dataset (Yearly scale)
+var dataset = ee.ImageCollection('MODIS/061/MCD12Q1');
+
+// Define your customRegion correctly
+var customRegion = ee.Geometry.Polygon(
+  [[[46.104615635176394, 35.07184941455777],  // Upper-left corner
+    [46.104615635176394, 30.920485090809773], // Lower-left corner
+    [49.1682827875905, 30.920485090809773],   // Lower-right corner
+    [49.1682827875905, 35.07184941455777]]]   // Upper-right corner
+);
+
+// Function to export the 'LC_Type1' band from the first image in the filtered dataset as a GeoTIFF
+var exportImageToTiff = function(image, year) {
+  // Get the image date as a string for naming the export
+  var dateString = year;
+  
+  // Select the 'LC_Type1' (Land Cover Type 1) band
+  var landCover = image.select('LC_Type1');
+
+  // Define the export parameters
+  var exportParams = {
+    image: landCover,
+    description: 'MODIS_LandCover_' + dateString,
+    region: customRegion, // Export for the custom region
+    crs: 'EPSG:4326', // Set the coordinate system to WGS84
+    scale: 0.01 * 11132, // 0.01 degrees in meters (~1.1132 km)
+    maxPixels: 1e13 // High maxPixels to avoid export errors
+  };
+  
+  // Export the band to Google Drive
+  Export.image.toDrive(exportParams);
+};
+
+// Loop over the years (adjust as needed)
+for (var year = 2002; year <= 2022; year++) {  // Example for years 2002-2022
+  // Define the start date for filtering the dataset
+  var startDate = year + '-01-01';
+  var startDateObj = ee.Date(startDate);
+
+  // Use ee.Date.advance() to get the end date (just for better readability)
+  var endDateObj = startDateObj.advance(1, 'year').advance(-1, 'day');
+
+  // Filter the dataset for the given year
+  var filteredDataset = dataset.filterDate(startDateObj, endDateObj);
+
+  // Check if there is data for the year
+  var image = filteredDataset.first();
+  if (image) {
+    // Export the 'LC_Type1' band from the first image in the filtered dataset
+    exportImageToTiff(image, year);
+  }
+}
+
+// Print a message indicating the export process
+print('Export process started. Check the "Tasks" tab for progress.');

@@ -1,0 +1,33 @@
+📊 1. BSDI Code (Basin Sustainable Development Index)
+Purpose:
+The BSDI code is designed to evaluate sustainable development at a watershed or regional level using a combination of socioeconomic and environmental indicators. The goal is to provide a single index (BSDI) that reflects the overall sustainability status, which is particularly useful for comparing scenarios over time (e.g., historical vs. future projections).
+
+Key Features:
+
+Input: A DataFrame containing relevant indicators such as RGDP (economic), environmental health, population, and groundwater level.
+
+Normalization: Each variable is normalized between 0 and 1. For variables like population (where higher values imply lower sustainability), inverted normalization is applied.
+
+BSDI Calculation: The BSDI is calculated as the geometric mean of the normalized indicators. This approach penalizes poor performance in any one category and ensures balance.
+
+Object-Oriented Design: The code uses a class structure, making it modular, reusable, and easy to extend for different numbers of indicators or data sources.
+
+Output: A new DataFrame with the BSDI index appended, which can be further analyzed or visualized.
+
+Use Case: This approach is suitable for sustainability monitoring, decision support systems in IWRM (Integrated Water Resources Management), or climate-resilience assessments.
+
+🗺️ 2. CA-Markov Code for Land Use Land Cover Prediction
+Purpose:
+The Cellular Automata-Markov (CA-Markov) model is a hybrid technique for simulating and forecasting land use and land cover (LULC) change. It combines the transition probability matrices from Markov chains with the spatial dynamics of cellular automata, offering both temporal and spatial LULC modeling.
+
+Key Features:
+
+Input: Historical land use raster files (GeoTIFF), typically from remote sensing classification (e.g., LULC maps from 2000, 2005, and 2010).
+
+Transition Matrix: Computes transition probabilities based on historical changes, indicating the likelihood of LULC types changing from one class to another.
+
+Cellular Automata (CA): Adds spatial rules that guide how transitions spread over space using neighborhood-based influence.
+
+Iterations: The model runs iteratively to simulate LULC for future years based on historical patterns.
+
+Output: A GeoTIFF raster predicting future LULC, which can be validated against actual data or used in scenario analysis.
